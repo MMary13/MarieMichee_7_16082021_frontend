@@ -1,18 +1,17 @@
 <template>
   <div id="home">
-    <img alt="Groupomania logo" src="../assets/logo_groupomania-red-left.png">
-      <div class="nav">
-        <router-link to="/register">S'inscrire</router-link>
-        <router-link to="/login">Se connecter</router-link>
-      </div>
-      <router-view/>
+    <HelloWorld />
   </div>
 </template>
 
 <script>
+import HelloWorld from '../components/HelloWorld.vue'
 
 export default {
   name: 'Home',
+  components: {
+    HelloWorld
+  },
   mounted() {
     if(this.$store.getters.isAuthenticated) {
       console.log("Authentifié: "+this.$store.state.authenticated);

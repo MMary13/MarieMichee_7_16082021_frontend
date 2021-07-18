@@ -1,27 +1,29 @@
 <template>
-  <div>
+  <div id="login">
     <img alt="Groupomania logo" src="../assets/logo_groupomania-red-left.png">
-    <div class="login">
-        <h1>Se connecter</h1>
-        <form @submit.prevent="login">
-        <div class="form-item">
+    <div class="bg-dark mx-5 p-4 w-25 mx-auto rounded-3">
+        <h1 class="my-2 fs-1 fw-bold">Se connecter</h1>
+        <b-form @submit.prevent="login" class="d-flex flex-column justify-content-center justify-items-center">
+        <b-form-group class=" w-100 mt-4">
             <label for="mail"><i class="far fa-envelope"></i></label>
-            <input v-model="user.mail" type="email" name="email" id="mail" placeholder="Adresse mail">
-        </div>
+            <b-form-input v-model="user.mail" type="email" name="email" id="mail" placeholder="Adresse mail"></b-form-input>
+        </b-form-group>
         <div v-if="errors" class="error">
-              <p v-if="!$v.user.mail.required">Le champ est requis.</p>
-              <p v-if="!$v.user.mail.email">Votre mail n'est pas valide.</p>
+          <b-form-invalid-feedback :state="emailValidation" v-if="!$v.user.mail.required">Le champ est requis.</b-form-invalid-feedback>
+          <b-form-invalid-feedback :state="emailValidation" v-if="!$v.user.mail.email">Votre mail n'est pas valide.</b-form-invalid-feedback>
         </div>
-        <div class="form-item">
+
+        <b-form-group class="w-100 mt-4">
             <label for="pwsd"><i class="fas fa-lock"></i></label>
-            <input v-model="user.password" type="password" name="password" id="pwsd" placeholder="Mot de passe">
-        </div>
+            <b-form-input v-model="user.password" type="password" name="password" id="pwsd" placeholder="Mot de passe"></b-form-input>
+        </b-form-group>
         <div v-if="errors" class="error">
-              <p v-if="!$v.user.password.required">Le champ est requis.</p>
-              <p v-if="!$v.user.password.strongPassword">Votre mot de passe doit contenir 1 lettre Majuscule, 1 lettre minuscule, 1 chiffre, un caractère spécial et doit faire au minimum 8 caractères.</p>
+              <b-form-invalid-feedback :state="passwordValidation" v-if="!$v.user.password.required">Le champ est requis.</b-form-invalid-feedback>
+              <b-form-invalid-feedback :state="passwordValidation" v-if="!$v.user.password.strongPassword">Votre mot de passe doit contenir 1 lettre Majuscule, 1 lettre minuscule, 1 chiffre, un caractère spécial et doit faire au minimum 8 caractères.</b-form-invalid-feedback>
         </div>
-        <button type="submit" class="btn btn-primary">Connexion</button>
-        </form>
+        
+        <b-button type="submit" variant="primary" class="btn btn-primary mt-5 align-self-center fs-4 fw-bold">Connexion</b-button>
+      </b-form>
     </div>
   </div>
 
@@ -40,6 +42,14 @@ export default {
         password:null
       },
       errors: false
+    }
+  },
+  computed: {
+    emailValidation() {
+      return !this.$v.user.mail.$invalid;
+    },
+    passwordValidation() {
+      return !this.$v.user.password.$invalid;
     }
   },
   validations: {
@@ -95,42 +105,4 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-.login {
-  background-color: #dadada;
-  padding: 25px 35px 35px 35px;
-  width:30%;
-  margin: auto;
-  margin-top: 40px;
-}
-
-form {
-  display: flex;
-  flex-direction: column;
-}
-
-.form-item {
-  display: flex;
-  justify-content: space-between;
-  margin: 20px 0 5px 0;
-  i {
-    font-size:30px;
-  }
-  input {
-        width: 90%;
-        height: 30px;
-        border:none;
-        border-radius: 5px;
-        font-size: 20px;
-    }
-}
-
-button {
-  margin-top:25px;
-}
-.error {
-  text-align: left;
-  color: red; 
-  font-size: 12px;
-}
-
 </style>

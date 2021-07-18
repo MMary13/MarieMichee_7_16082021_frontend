@@ -1,42 +1,42 @@
 <template>
-  <div>
+  <div id="register">
     <img alt="Groupomania logo" src="../assets/logo_groupomania-red-left.png">
-    <div class="register">
-        <h1>S'inscrire</h1>
-        <form @submit.prevent="signup">
-        <div class="form-item">
+    <div class="bg-dark mx-5 my-2 p-4 w-25 mx-auto rounded-3">
+        <h1 class="my-2 fs-1 fw-bold">S'inscrire</h1>
+        <b-form @submit.prevent="signup" class="d-flex flex-column justify-content-center justify-items-center">
+        <b-form-group class="w-100 mt-4">
             <label for="firstName"><i class="fas fa-user"></i></label>
-            <input v-model="user.firstName" type="text" name="firstName" id="firstName" placeholder="Prénom">
-        </div>
+            <b-form-input v-model="user.firstName" type="text" name="firstName" id="firstName" placeholder="Prénom"></b-form-input>
+        </b-form-group>
         <div v-if="errors" class="error">
-          <p v-if="!$v.user.firstName.required">Le champ est requis.</p>
+          <b-form-invalid-feedback :state="prenomValidation" v-if="!$v.user.firstName.required">Le champ est requis.</b-form-invalid-feedback>
           </div>
-        <div class="form-item">
+        <b-form-group class=" w-100 mt-4">
             <label for="lastName"><i class="fas fa-user"></i></label>
-            <input v-model="user.lastName" type="text" name="lastName" id="lastName" placeholder="Nom de famille">
-        </div>
+            <b-form-input v-model="user.lastName" type="text" name="lastName" id="lastName" placeholder="Nom de famille"></b-form-input>
+        </b-form-group>
         <div v-if="errors" class="error">
-              <p v-if="!$v.user.lastName.required">Le champ est requis.</p>
+              <b-form-invalid-feedback :state="nomValidation" v-if="!$v.user.lastName.required">Le champ est requis.</b-form-invalid-feedback>
         </div>
-        <div class="form-item">
+        <b-form-group class=" w-100 mt-4">
             <label for="email"><i class="far fa-envelope"></i></label>
-            <input v-model="user.mail" type="email" name="email" id="email" placeholder="Adresse mail">
-        </div>
+            <b-form-input v-model="user.mail" type="email" name="email" id="email" placeholder="Adresse mail"></b-form-input>
+        </b-form-group>
         <div v-if="errors" class="error">
-              <p v-if="!$v.user.mail.required">Le champ est requis.</p>
-              <p v-if="!$v.user.mail.email">Votre mail n'est pas valide.</p>
+              <b-form-invalid-feedback :state="emailValidation" v-if="!$v.user.mail.required">Le champ est requis.</b-form-invalid-feedback>
+              <b-form-invalid-feedback :state="emailValidation" v-if="!$v.user.mail.email">Votre mail n'est pas valide.</b-form-invalid-feedback>
         </div>
-        <div class="form-item">
+        <b-form-group class=" w-100 mt-4">
             <label for="password"><i class="fas fa-lock"></i></label>
-            <input v-model="user.password" type="password" name="password" id="password" placeholder="Mot de passe">
-        </div>
+            <b-form-input v-model="user.password" type="password" name="password" id="password" placeholder="Mot de passe"></b-form-input>
+        </b-form-group>
         <div v-if="errors" class="error">
-          <p v-if="!$v.user.password.required">Le champ est requis.</p>
-          <p v-if="!$v.user.password.strongPassword">Votre mot de passe doit contenir 1 lettre Majuscule, 1 lettre minuscule, 1 chiffre, un caractère spécial et doit faire au minimum 8 caractères.</p>
+          <b-form-invalid-feedback :state="passwordValidation" v-if="!$v.user.password.required">Le champ est requis.</b-form-invalid-feedback>
+          <b-form-invalid-feedback :state="passwordValidation" v-if="!$v.user.password.strongPassword">Votre mot de passe doit contenir 1 lettre Majuscule, 1 lettre minuscule, 1 chiffre, un caractère spécial et doit faire au minimum 8 caractères.</b-form-invalid-feedback>
         </div>
-        <button type="submit" class="btn btn-primary">Enregistrer</button>
-        </form>
-        <p>Vous avez déjà un compte? <router-link to="/login">Se connecter</router-link></p>
+        <b-button type="submit" variant="primary" class="btn btn-primary mt-5 mb-3 align-self-center fs-4 fw-bold rounded-2">Enregistrer</b-button>
+        </b-form>
+        <p>Vous avez déjà un compte? <router-link to="/login" class="text-reset fw-bold">Se connecter</router-link></p>
     </div>
   </div>
 </template>
@@ -57,6 +57,20 @@ export default {
         password:null
       },
       errors:false
+    }
+  },
+  computed: {
+    prenomValidation() {
+      return !this.$v.user.firstName.$invalid;
+    },
+    nomValidation() {
+      return !this.$v.user.lastName.$invalid;
+    },
+    emailValidation() {
+      return !this.$v.user.mail.$invalid;
+    },
+    passwordValidation() {
+      return !this.$v.user.password.$invalid;
     }
   },
    validations: {
@@ -128,46 +142,4 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-.register {
-  background-color: #dadada;
-  padding: 25px 35px 35px 35px;
-  width:30%;
-  margin:auto;
-  margin-top: 40px;
-  a {
-      color: #2c3e50;
-      font-weight: bold;
-  }
-}
-
-form {
-  display: flex;
-  flex-direction: column;
-}
-
-.form-item {
-  display: flex;
-  justify-content: space-between;
-  margin: 15px 0 5px 0;
-  i {
-    font-size:30px;
-  }
-  input {
-        width: 90%;
-        height: 30px;
-        border:none;
-        border-radius: 5px;
-        font-size: 20px;
-    }
-}
-
-button {
-  margin-top:25px;
-}
-
-.error {
-  text-align: left;
-  color: red; 
-  font-size: 12px;
-}
 </style>
