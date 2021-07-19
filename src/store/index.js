@@ -5,7 +5,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    token: null,
+    token: localStorage.getItem('user-token') || '',
     status: '',
     user: {}
   },
@@ -20,16 +20,27 @@ export default new Vuex.Store({
     auth_error(state){
       state.status = 'error'
     },
-    logout(state){
+    logout_request(state){
       state.status = ''
       state.token = ''
+      state.user = {}
     }
   },
   getters: {
-    isAuthenticated: state => !!state.token,
+    isAuthenticated: state => {
+      // !!state.token
+      if(state.token == ''){
+        return false;
+      } else {
+        return true;
+      }
+    },
     authStatus: state => state.status,
   },
   actions: {
+    logout(context) {
+      context.commit('logout_request');
+    }
   },
   modules: {
   }

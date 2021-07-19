@@ -1,13 +1,13 @@
 <template>
-    <header>
-        <nav>
+    <header class="shadow-sm mt-0 pb-2">
+        <nav class="mx-3">
             <div>
                 <router-link to="/"><img alt="Groupomania logo" src="../assets/logo_groupomania-red-left.png"></router-link>
             </div>
-            <div class="header-links">
-                <router-link to="/"><i class="fas fa-comments"></i></router-link>
-                <router-link to="/profil"><i class="fas fa-user-circle"></i></router-link>
-                <router-link to="/"><i class="fas fa-sign-out-alt"></i></router-link>
+            <div class="header-links d-flex align-items-center fs-1 text-primary">
+                <!-- <router-link to="/"><i class="fas fa-comments"></i></router-link> -->
+                <router-link to="/profil"><i class="fas fa-user-circle mx-4"></i></router-link>
+                <router-link to="/" @click.native="logout"><i class="fas fa-sign-out-alt mx-4"></i></router-link>
             </div>
         </nav>
     </header>
@@ -16,18 +16,22 @@
 <script>
 
 export default {
-  name: 'Header'
+  name: 'Header',
+  methods: {
+      logout() {
+          localStorage.removeItem('user-token');
+          this.$store.state.status = '';
+          this.$store.state.user = {};
+          console.log("Déconnexion réussie");
+          this.$router.push({ name: "Landing"});
+      }
+  }
 }
 </script>
 
 <style scoped lang="scss">
-header {
-    border-bottom-color: #FFD7D7;
-    border-bottom-width: 5px;
-    border-bottom-style: solid;
-}
     nav {
-        margin: 15px;
+
         display: flex;
         justify-content: space-between;
         img {
@@ -35,17 +39,7 @@ header {
         }
     }
 
-    .header-links {
-        display: flex;
-        align-items: center;
-        font-size: 35px;
-        i {
-            color: #FFD7D7;
-            margin: 0 20px 0 20px;
-            &:hover {
-                color: #FD2D01;
-            }
-        }
-        
+    .header-links i:hover {
+        color: #FD2D01;   
     }
 </style>

@@ -1,51 +1,26 @@
 <template>
-  <div id="home">
-    <HelloWorld />
+    <div id="Home">
+      <Header />
+    <h1 class="fs-1 fw-bold bg-primary p-5 m-5 rounded-3 top-50 start-50">Mon fil d'actualité</h1>
   </div>
 </template>
 
 <script>
-import HelloWorld from '../components/HelloWorld.vue'
+import Header from '../components/Header.vue'
 
 export default {
   name: 'Home',
   components: {
-    HelloWorld
+    Header
   },
   mounted() {
-    if(this.$store.getters.isAuthenticated) {
-      console.log("Authentifié: "+this.$store.state.authenticated);
-        this.$router.replace({ name: "Profil" });
+    console.log(this.$store.state.token);
+    console.log(this.$store.getters.isAuthenticated);
+    if(!this.$store.getters.isAuthenticated) {
+      console.log(" Non Authentifié");
+        this.$router.replace({ name: "Landing" });
     }
   }
 }
 </script>
 
-<style scoped lang="scss">
-  #home {
-    margin-top: 60px;
-  }
-  
-  .nav {
-    width: 50%;
-    margin:auto;
-    margin-top:150px;
-    display: flex;
-    justify-content: space-between;
-    a {
-      background-color: #FFD7D7;
-      text-decoration: none;
-      font-size: 36px;
-      color: #2c3e50;
-      font-weight: bold;
-      padding: 15px;
-      border-radius: 15px;
-      width: 250px;
-      box-shadow: 3px 3px #F2F2F2;
-      &:hover {
-        background-color: #FD2D01;
-        color:#FFD7D7;
-      }
-    }
-  }
-</style>
