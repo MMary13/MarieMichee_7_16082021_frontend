@@ -1,6 +1,6 @@
 <template>
   <div id="login">
-    <img alt="Groupomania logo" src="../assets/logo_groupomania-red-left.png">
+    <img alt="Groupomania logo" src="../assets/logo_groupomania-red-left.png" class="w-75">
     <div class="bg-dark my-3 mx-5 p-5 mx-auto rounded-3">
         <h1 class="my-2 fs-1 fw-bold">Se connecter</h1>
         <b-form @submit.prevent="login" class="d-flex flex-column justify-content-center justify-items-center">
@@ -20,6 +20,12 @@
         <div v-if="errors" class="error">
               <b-form-invalid-feedback :state="passwordValidation" v-if="!$v.user.password.required">Le champ est requis.</b-form-invalid-feedback>
               <b-form-invalid-feedback :state="passwordValidation" v-if="!$v.user.password.strongPassword">Votre mot de passe doit contenir 1 lettre Majuscule, 1 lettre minuscule, 1 chiffre, un caractère spécial et doit faire au minimum 8 caractères.</b-form-invalid-feedback>
+        </div>
+        <div class="alert alert-secondary w-100 mt-2" role="alert" v-if="falseIdentification">
+          Votre identifiant ou votre mot de passe est incorrect.
+        </div>
+        <div class="alert alert-secondary w-100 mt-2" role="alert" v-if="serverIssue">
+          Nous rencontrons un problème de server, veuillez nous excuser.
         </div>
         
         <button type="submit" class="btn btn-primary mt-5 align-self-center fs-4 fw-bold">Connexion</button>
@@ -41,7 +47,9 @@ export default {
         mail:null,
         password:null
       },
-      errors: false
+      errors: false,
+      falseIdentification: false,
+      serverIssue: false
     }
   },
   computed: {
@@ -84,11 +92,18 @@ export default {
       axios.post('http://localhost:3000/api/auth/login',this.user)
         .then(response => {
           console.log(response.data);
-          localStorage.setItem('user-token', response.data.token)
+          localStorage.setItem('user-token', response.data.token);
+          this.$store.state.token = response.data.token;
           this.$router.push({ name: "Home" });
         })
         .catch(error => {
+          if(error.response.status === 401 ) {
           console.error("Votre mot de passe ou votre identifiant est incorrect",error);
+          this.falseIdentification = true;
+          } else {
+            console.error("Problème de server: ",error);
+            this.serverIssue = true;
+          }
         });
       } else {
         console.log ("Requête non valide");
@@ -104,8 +119,18 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+#login img {
+  width: 60%;
+  @media (max-width: 767px) {
+  width: 90%
+  }
+}
+
 #login div {
   width:40%;
+  @media (max-width: 767px) {
+  width: 90%
+  }
 }
 
 #login .form-group, #login .errors {

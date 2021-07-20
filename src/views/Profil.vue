@@ -1,24 +1,29 @@
 <template>
   <div class="profil">
     <Header/>
-    <section class="d-flex mx-5 justify-content-start">
-      <div>
-        <img src="../assets/profil-vide.jpg" alt="Image de Profil">
-      </div>
-      
-      <div class="w-75 d-flex flex-column align-items-start ms-3">
-        <h1 class="fs-1 fw-bold">Mon Profil</h1>
-        <p><strong>Prénom :</strong> {{ $store.state.user.firstName }}</p>
-        <p><strong>Nom :</strong> {{ $store.state.user.lastName }}</p>
-        <p><strong>Mail</strong> : {{ $store.state.user.mail }}</p>
-        <div class="d-flex justify-content-between align-items-center mt-5">
-          <button class="btn btn-primary fs-4 fw-bold me-2" @click="getUpdateForm">Modifier mon profil</button>
-          <button class="btn btn-primary fs-4 fw-bold ms-2" @click="deleteProfil">Supprimer mon compte</button>
+    <div>
+      <h1 class="fs-1 fw-bold bg-primary py-2">Mon Profil</h1>
+      <section class="d-flex flex-column justify-content-center">
+        <div class="d-flex flex-column flex-md-row justify-content-center justify-content-md-start px-2">
+          <div>
+            <avatar username="Marie Michée" :size="100" background-color="#FFD7D7" @avatar-initials="usernameUpdate" class="mb-2"></avatar>
+            <!-- <img  id="avatar" src="../assets/profil-vide.jpg" alt="Image de Profil" class="pb-3"> -->
+          </div>
+          <div class="d-flex flex-column align-items-start ms-3">
+            <p><strong>Prénom :</strong> {{ $store.state.user.firstName }}</p>
+            <p><strong>Nom :</strong> {{ $store.state.user.lastName }}</p>
+            <p><strong>Mail</strong> : {{ $store.state.user.mail }}</p>
+          </div>
         </div>
-      </div>
+      
+        <div class="d-flex flex-column flex-md-row justify-content-center align-items-center justify-content-md-around my-3">
+          <button class="btn btn-primary fs-4 fw-bold my-3" @click="getUpdateForm">Modifier mon profil</button>
+          <button class="btn btn-primary fs-4 fw-bold my-3" @click="deleteProfil">Supprimer mon compte</button>
+        </div>
     </section>
-
-    <b-form @submit.prevent="updateProfil" class="d-flex flex-column justify-content-center w-50 mx-auto my-5 bg-dark p-3 rounded-3" v-if="ok">
+    </div>
+    
+    <b-form @submit.prevent="updateProfil" class="form-profil d-flex flex-column justify-content-center mx-auto my-5 bg-dark p-3 rounded-3" v-if="ok">
       <h2>Modification du profil:</h2>
         <div class="mt-4 d-flex align-items-center">
             <label for="firstName">Prénom: </label>
@@ -52,6 +57,26 @@
         </div>
         <button type="submit" class="btn btn-primary mt-5 mb-3 align-self-center fs-4 fw-bold rounded-2">Enregistrer</button>
         </b-form>
+        <div v-if="isAdmin" class="w-100">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Utilisateur</th>
+                <th scope="col">Mail</th>
+                <th scope="col">Role</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="user in users" v-bind:key="user.id">
+                <th scope="row">{{ user.id }}</th>
+                <td>{{user.firstName }} {{ user.lastName }}</td>
+                <td>{{ user.mail }}</td>
+                <td>{{ user.userRole }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
   </div>
 </template>
 
@@ -59,11 +84,13 @@
 import axios from 'axios';
 import { required, email } from 'vuelidate/lib/validators'
 import Header from '../components/Header.vue'
+import Avatar from 'vue-avatar'
 
 export default {
   name: 'Profil',
   components: {
-    Header
+    Header,
+    'avatar' : Avatar
   },
   data() {
     return{
@@ -73,8 +100,10 @@ export default {
         mail:null,
         password:null
       },
+      users: [],
       ok: false,
-      errors:false
+      errors:false,
+      isAdmin:false
     }
   },
   computed: {
@@ -113,6 +142,9 @@ export default {
     }
   },
   methods: {
+    usernameUpdate() {
+      console.log(this);
+    },
     formValidated() {
       if(!this.$v.user.$invalid) {
         this.errors = false;
@@ -172,6 +204,21 @@ export default {
     this.user.firstName = this.$store.state.user.firstName;
     this.user.lastName = this.$store.state.user.lastName;
     this.user.mail = this.$store.state.user.mail;
+    if(this.$store.state.user.userRole === 'ADMIN') {
+      console.log("This user is an admin");
+      this.isAdmin = true;
+      axios.get('http://localhost:3000/api/auth/user', { headers: { Authorization: 'Bearer ' +this.$store.state.token}})
+            .then(response => {
+              console.log(response.data);
+              this.users = response.data.users;
+            })
+            .catch(error => {
+              console.error("Impossible de récupérer les publications: ",error);
+            });
+    } else {
+      console.log("This user is not an admin");
+      this.isAdmin = false;
+    }
   },
   mounted() {
     console.log(this.$store.getters.isAuthenticated);
@@ -179,12 +226,17 @@ export default {
       console.log("Non Authentifié");
         this.$router.replace({ name: "Home" });
     }
+
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-
-
+.form-profil {
+  width: 50%;
+  @media (max-width: 767px) {
+  width: 90%
+  }
+}
 </style>

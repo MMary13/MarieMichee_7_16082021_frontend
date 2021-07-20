@@ -1,6 +1,6 @@
 <template>
   <div id="register">
-    <img alt="Groupomania logo" src="../assets/logo_groupomania-red-left.png">
+    <img alt="Groupomania logo" src="../assets/logo_groupomania-red-left.png" class="w-75">
     <div class="bg-dark mx-5 my-3 p-4 mx-auto rounded-3">
         <h1 class="my-2 fs-1 fw-bold">S'inscrire</h1>
         <b-form @submit.prevent="signup" class="d-flex flex-column justify-content-center justify-items-center">
@@ -125,8 +125,9 @@ export default {
       axios.post('http://localhost:3000/api/auth/login',requestBody)
         .then(response => {
           console.log(response.data);
+          localStorage.setItem('user-token', response.data.token);
           this.$store.state.token = response.data.token;
-          this.$router.push('/profil');
+          this.$router.push({ name: "Home" });
         })
         .catch(error => {
           console.error("Votre mot de passe ou votre identifiant est incorrect",error);
@@ -142,8 +143,18 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+#register img {
+  width: 60%;
+  @media (max-width: 767px) {
+  width: 90%
+  }
+}
+
 #register div {
   width:40%;
+  @media (max-width: 767px) {
+  width: 90%
+  }
 }
 
 #register .form-group, #register .errors {
