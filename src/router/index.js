@@ -5,6 +5,7 @@ import Landing from '../components/Landing.vue'
 import Register from '../components/Register.vue'
 import Login from '../components/Login.vue'
 import Profil from '../views/Profil.vue'
+import Post from '../components/Post.vue'
 
 Vue.use(VueRouter)
 
@@ -33,6 +34,11 @@ const routes = [
     path: '/profil',
     name: 'Profil',
     component: Profil
+  },
+  {
+    path: '/post/:post_id',
+    name: 'Post',
+    component: Post
   }
 ]
 

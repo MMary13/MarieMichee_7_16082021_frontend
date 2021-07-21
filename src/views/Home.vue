@@ -3,6 +3,25 @@
       <Header />
       <div>
       <h1 class="fs-1 fw-bold bg-primary py-2">Mon fil d'actualité</h1>
+      <div class="form-container shadow p-2 rounded-3 my-4 mx-auto">
+        <h2>Quelque chose à dire ou partager?</h2>
+        <b-form id="postform" @submit.prevent="addPost()" class="d-flex flex-column justify-content-center justify-items-center">
+        <div class="form-group mt-4 d-flex align-items-center">
+            <label for="title">Titre: </label>
+            <input class="form-control ms-3" v-model="newPost.title" type="text" name="title" id="title">
+        </div>
+
+        <div class="form-group mt-4 d-flex align-items-center">
+            <textarea class="form-control ms-3" v-model="newPost.content" name="post-content" form="postform">Entrez votre texte ici...</textarea>
+        </div>
+        <div class="alert alert-secondary w-100 mt-2" role="alert" v-if="publishIssue">
+          Veuillez préciser un titre et un contenu avant de publier votre article.
+        </div>
+        
+        <button type="submit" class="btn btn-primary my-3 align-self-center fs-4 fw-bold">Publier</button>
+      </b-form>
+
+      </div>
       <section class="d-flex flex-column justify-content-center align-items-center">
         <div class="post shadow-lg p-4 rounded-3 my-3" v-for="post in posts" v-bind:key="post.id">
           <h2 class="fs-2 fw-bold text-primary">{{ post.title }}</h2>
@@ -14,8 +33,8 @@
               <div><i class="fas fa-thumbs-down ms-2"></i></div> -->
             </div>
             <div class="d-flex fs-4 text-primary" v-if="isMyPost(post.user_id)">
-              <div><i class="fas fa-edit me-2"></i></div>
-              <div><i class="fas fa-trash-alt ms-2"></i></div>
+              <div @click="getUpdatePostForm(post.id)"><i class="fas fa-edit me-2"></i></div>
+              <div @click="deletePost(post.id)"><i class="fas fa-trash-alt ms-2"></i></div>
             </div>
           </div>
         </div>
@@ -35,35 +54,65 @@ export default {
   },
   data() {
     return {
-      posts: []
+      posts: [],
+      newPost: {},
+      publishIssue: false
     }
   },
   methods: {
     isMyPost(postUserId) {
-      if(postUserId == this.$store.state.user.id) {
-        return true;
-      } else {
-        return false;
-      }
+      return postUserId == this.$store.state.user.id;
+    },
+    addPost() {
+      axios.post('http://localhost:3000/api/post', this.newPost, { headers: { Authorization: 'Bearer ' +this.$store.state.token}})
+        .then(response => {
+          console.log(response.data);
+          //Update posts
+          this.getAllPosts();
+          //Clear form
+          this.newPost = {};
+        })
+        .catch(error => {
+          console.error("Impossible de publier cet article: ",error);
+          this.publishIssue = true;
+        });
+    },
+    getAllPosts() {
+      axios.get('http://localhost:3000/api/post', { headers: { Authorization: 'Bearer ' +this.$store.state.token}})
+      .then(response => {
+        console.log(response.data);
+        this.posts = response.data.posts;
+        this.posts.forEach(post => {
+          const fullDate = new Date(post.createdAt);
+          const day = fullDate.getUTCDate();
+          const month = fullDate.getUTCMonth();
+          const year = fullDate.getUTCFullYear();
+          const formattedDate = day+'/'+month+'/'+year;
+          post.createdAt = formattedDate;
+        });
+      })
+      .catch(error => {
+        console.error("Impossible de récupérer les publications: ",error);
+      });
+    },
+    deletePost(postId) {
+      axios.delete('http://localhost:3000/api/post/'+postId, { headers: { Authorization: 'Bearer ' +this.$store.state.token}})
+        .then(response => {
+          console.log(response.data);
+          //Update posts
+          this.getAllPosts();
+        })
+        .catch(error => {
+          console.error("Impossible de récupérer les publications: ",error);
+        });
+    },
+    getUpdatePostForm(postId) {
+      this.$router.push('post/'+postId);
+      this.$route.params.pathMatch;
     }
   },
   beforeMount() {
-    axios.get('http://localhost:3000/api/post', { headers: { Authorization: 'Bearer ' +this.$store.state.token}})
-            .then(response => {
-              console.log(response.data);
-              this.posts = response.data.posts;
-              this.posts.forEach(post => {
-                const fullDate = new Date(post.createdAt);
-                const day = fullDate.getUTCDate();
-                const month = fullDate.getUTCMonth();
-                const year = fullDate.getUTCFullYear();
-                const formattedDate = day+'/'+month+'/'+year;
-                post.createdAt = formattedDate;
-              });
-            })
-            .catch(error => {
-              console.error("Impossible de récupérer les publications: ",error);
-            });
+    this.getAllPosts();
   },
   mounted() {
     console.log(this.$store.getters.isAuthenticated);
@@ -79,15 +128,22 @@ export default {
 <style scoped lang="scss">
 @import '../app.scss';
 
-.post {
+.post, .form-container {
   width:75%;
-  @media (max-width: 767px) {
-  width: 90%
-  }
 }
 
 .post-footer div i:hover,.fa-thumbs-up:active,.fa-thumbs-down:active {
   color:$secondary;
+}
+
+@media (max-width: 767px) {
+  .post, .form-container {
+  width: 90%
+  }
+
+  .form-container h2 {
+    font-size:20px;
+  }
 }
 
 </style>

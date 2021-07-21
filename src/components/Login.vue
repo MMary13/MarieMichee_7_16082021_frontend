@@ -70,7 +70,6 @@ export default {
         required,
         isPasswordStrong(password) {
           const regex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,30}$/;
-          console.log(password);
           return regex.test(password);
         }
       }
