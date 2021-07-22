@@ -12,13 +12,13 @@
         </div>
 
         <div class="form-group mt-4 d-flex align-items-center">
-            <textarea class="form-control ms-3" v-model="newPost.content" name="post-content" form="postform">Entrez votre texte ici...</textarea>
+            <textarea class="form-control ms-3" v-model="newPost.content" name="post-content" form="postform" rows="5">Entrez votre texte ici...</textarea>
         </div>
         <div class="alert alert-secondary w-100 mt-2" role="alert" v-if="publishIssue">
           Veuillez préciser un titre et un contenu avant de publier votre article.
         </div>
         
-        <button type="submit" class="btn btn-primary my-3 align-self-center fs-4 fw-bold">Publier</button>
+        <button type="submit" class="btn btn-primary shadow my-3 align-self-center fs-4 fw-bold">Publier</button>
       </b-form>
 
       </div>

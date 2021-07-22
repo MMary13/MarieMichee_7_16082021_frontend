@@ -3,39 +3,39 @@
     <img alt="Groupomania logo" src="../assets/logo_groupomania-red-left.png" class="w-75">
     <div class="bg-dark mx-5 my-3 p-4 mx-auto rounded-3">
         <h1 class="my-2 fs-1 fw-bold">S'inscrire</h1>
-        <b-form @submit.prevent="signup" class="d-flex flex-column justify-content-center justify-items-center">
+        <form @submit.prevent="signup" class="d-flex flex-column justify-content-center justify-items-center">
         <div class="form-group mt-4 d-flex align-items-center">
             <label for="firstName"><i class="fas fa-user"></i></label>
             <input class="form-control ms-3" v-model="user.firstName" type="text" name="firstName" id="firstName" placeholder="Prénom">
         </div>
-        <div v-if="errors" class="error">
-          <b-form-invalid-feedback :state="prenomValidation" v-if="!$v.user.firstName.required">Le champ est requis.</b-form-invalid-feedback>
+        <div v-if="errors" class="error text-secondary text-start ps-5">
+          <form-invalid-feedback :state="prenomValidation" v-if="!$v.user.firstName.required">Le champ est requis.</form-invalid-feedback>
           </div>
         <div class="form-group mt-4 d-flex align-items-center">
             <label for="lastName"><i class="fas fa-user"></i></label>
             <input class="form-control ms-3" v-model="user.lastName" type="text" name="lastName" id="lastName" placeholder="Nom de famille">
         </div>
-        <div v-if="errors" class="error">
-              <b-form-invalid-feedback :state="nomValidation" v-if="!$v.user.lastName.required">Le champ est requis.</b-form-invalid-feedback>
+        <div v-if="errors" class="error text-secondary text-start ps-5">
+              <form-invalid-feedback :state="nomValidation" v-if="!$v.user.lastName.required">Le champ est requis.</form-invalid-feedback>
         </div>
         <div class="form-group mt-4 d-flex align-items-center">
             <label for="email"><i class="far fa-envelope"></i></label>
             <input class="form-control ms-3" v-model="user.mail" type="email" name="email" id="email" placeholder="Adresse mail">
         </div>
-        <div v-if="errors" class="error">
-              <b-form-invalid-feedback :state="emailValidation" v-if="!$v.user.mail.required">Le champ est requis.</b-form-invalid-feedback>
-              <b-form-invalid-feedback :state="emailValidation" v-if="!$v.user.mail.email">Votre mail n'est pas valide.</b-form-invalid-feedback>
+        <div v-if="errors" class="error text-secondary text-start ps-5">
+              <form-invalid-feedback :state="emailValidation" v-if="!$v.user.mail.required">Le champ est requis.</form-invalid-feedback>
+              <form-invalid-feedback :state="emailValidation" v-if="!$v.user.mail.email">Votre mail n'est pas valide.</form-invalid-feedback>
         </div>
         <div class="form-group mt-4 d-flex align-items-center">
             <label for="password"><i class="fas fa-lock"></i></label>
             <input class="form-control ms-3" v-model="user.password" type="password" name="password" id="password" placeholder="Mot de passe">
         </div>
-        <div v-if="errors" class="error">
-          <b-form-invalid-feedback :state="passwordValidation" v-if="!$v.user.password.required">Le champ est requis.</b-form-invalid-feedback>
-          <b-form-invalid-feedback :state="passwordValidation" v-if="!$v.user.password.strongPassword">Votre mot de passe doit contenir 1 lettre Majuscule, 1 lettre minuscule, 1 chiffre, un caractère spécial et doit faire au minimum 8 caractères.</b-form-invalid-feedback>
+        <div v-if="errors" class="error text-secondary text-start ps-5">
+          <form-invalid-feedback :state="passwordValidation" v-if="!$v.user.password.required">Le champ est requis.</form-invalid-feedback>
+          <form-invalid-feedback :state="passwordValidation" v-if="!$v.user.password.strongPassword">Votre mot de passe doit contenir 1 lettre Majuscule, 1 lettre minuscule, 1 chiffre, un caractère spécial et doit faire au minimum 8 caractères.</form-invalid-feedback>
         </div>
         <button type="submit" class="btn btn-primary mt-5 mb-3 align-self-center fs-4 fw-bold rounded-2">Enregistrer</button>
-        </b-form>
+        </form>
         <p>Vous avez déjà un compte? <router-link to="/login" class="text-reset fw-bold">Se connecter</router-link></p>
     </div>
   </div>
@@ -157,7 +157,7 @@ export default {
   }
 }
 
-#register .form-group, #register .errors {
+#register .form-group, #register .error {
   width: 100%;
 }
 </style>

@@ -10,7 +10,7 @@
         </div>
 
         <div class="form-group mt-4 d-flex align-items-center">
-            <textarea class="form-control ms-3" v-model="post.content" name="post-content" form="updatepostform" raws="50">Entrez votre texte ici...</textarea>
+            <textarea class="form-control ms-3" v-model="post.content" name="post-content" form="updatepostform" rows="10">Entrez votre texte ici...</textarea>
         </div>
         <div class="alert alert-secondary w-100 mt-2" role="alert" v-if="updateIssue">
           Veuillez préciser un titre et un contenu avant de publier votre article.

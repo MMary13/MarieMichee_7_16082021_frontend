@@ -6,8 +6,7 @@
       <section class="d-flex flex-column flex-md-row justify-content-center justify-content-md-around align-items-center">
         <div class="d-flex flex-column flex-md-row justify-content-center justify-content-md-start">
           <div>
-            <avatar :username="user.firstName+' '+user.lastName" :size="120" background-color="#FFD7D7" class="mb-2 px-2"></avatar>
-            <!-- <img  id="avatar" src="../assets/profil-vide.jpg" alt="Image de Profil" class="pb-3"> -->
+            <avatar :username="fullName" :size="120" background-color="#FFD7D7" class="mb-2 px-2"></avatar>
           </div>
           <div class="d-flex flex-column align-items-start ms-3">
             <p><strong>Prénom :</strong> {{ $store.state.user.firstName }}</p>
@@ -114,12 +113,7 @@ export default {
   },
   data() {
     return{
-      user: {
-        firstName:null,
-        lastName:null,
-        mail:null,
-        password:null
-      },
+      user: {},
       users: [],
       ok: false,
       errors:false,
@@ -127,6 +121,9 @@ export default {
     }
   },
   computed: {
+    fullName() {
+      return this.user.firstName+' '+this.user.lastName;
+    },
     prenomValidation() {
       return !this.$v.user.firstName.$invalid;
     },
@@ -238,19 +235,8 @@ export default {
     }
   },
   beforeMount() {
-    axios.get('http://localhost:3000/api/auth/profil', { headers: { Authorization: 'Bearer ' +this.$store.state.token}})
-            .then(response => {
-              console.log(response.data.user);
-              this.$store.state.user = response.data.user;
-              this.user = response.data.user;
-              this.user.password=null;
-            })
-            .catch(error => {
-              console.error("Votre mot de passe ou votre identifiant est incorrect",error);
-            });
-    this.user.firstName = this.$store.state.user.firstName;
-    this.user.lastName = this.$store.state.user.lastName;
-    this.user.mail = this.$store.state.user.mail;
+    this.user = this.$store.state.user;
+    this.user.password=null;
     if(this.$store.state.user.userRole === 'ADMIN') {
       console.log("This user is an admin");
       this.isAdmin = true;
