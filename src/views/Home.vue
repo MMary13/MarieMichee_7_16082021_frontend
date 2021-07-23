@@ -2,7 +2,7 @@
     <div id="Home">
       <Header />
       <div>
-      <h1 class="fs-1 fw-bold bg-primary py-2">Mon fil d'actualité</h1>
+      <h1 class="fs-1 fw-bold text-secondary py-3">Mon fil d'actualité</h1>
       <div class="form-container shadow p-2 rounded-3 my-4 mx-auto">
         <h2>Quelque chose à dire ou partager?</h2>
         <b-form id="postform" @submit.prevent="addPost()" class="d-flex flex-column justify-content-center justify-items-center">
@@ -32,10 +32,7 @@
               <!-- <div><i class="fas fa-thumbs-up me-2"></i></div>
               <div><i class="fas fa-thumbs-down ms-2"></i></div> -->
             </div>
-            <div class="d-flex fs-4 text-primary" v-if="isMyPost(post.user_id)">
-              <div @click="getUpdatePostForm(post.id)"><i class="fas fa-edit me-2"></i></div>
-              <div @click="deletePost(post.id)"><i class="fas fa-trash-alt ms-2"></i></div>
-            </div>
+            <router-link :to="{ name: 'Post', params: { post_id: post.id }}" class="fw-bold">En savoir plus</router-link>
           </div>
         </div>
       </section>
@@ -60,9 +57,6 @@ export default {
     }
   },
   methods: {
-    isMyPost(postUserId) {
-      return postUserId == this.$store.state.user.id;
-    },
     addPost() {
       axios.post('http://localhost:3000/api/post', this.newPost, { headers: { Authorization: 'Bearer ' +this.$store.state.token}})
         .then(response => {
@@ -94,21 +88,6 @@ export default {
       .catch(error => {
         console.error("Impossible de récupérer les publications: ",error);
       });
-    },
-    deletePost(postId) {
-      axios.delete('http://localhost:3000/api/post/'+postId, { headers: { Authorization: 'Bearer ' +this.$store.state.token}})
-        .then(response => {
-          console.log(response.data);
-          //Update posts
-          this.getAllPosts();
-        })
-        .catch(error => {
-          console.error("Impossible de récupérer les publications: ",error);
-        });
-    },
-    getUpdatePostForm(postId) {
-      this.$router.push('post/'+postId);
-      this.$route.params.pathMatch;
     }
   },
   beforeMount() {

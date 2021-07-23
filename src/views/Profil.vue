@@ -2,7 +2,7 @@
   <div class="profil">
     <Header/>
     <div>
-      <h1 class="fs-1 fw-bold bg-primary py-2">Mon Profil</h1>
+      <h1 class="fs-1 fw-bold text-secondary py-3">Mon Profil</h1>
       <section class="d-flex flex-column flex-md-row justify-content-center justify-content-md-around align-items-center">
         <div class="d-flex flex-column flex-md-row justify-content-center justify-content-md-start">
           <div>
@@ -16,8 +16,8 @@
         </div>
       
         <div class="d-flex flex-column justify-content-center align-items-center my-3">
-          <button class="btn btn-primary fs-4 fw-bold my-3" @click="getUpdateForm">Modifier mon profil</button>
-          <button class="btn btn-primary fs-4 fw-bold my-3" @click="deleteProfil">Supprimer mon compte</button>
+          <button class="btn btn-primary shadow fs-4 fw-bold my-3" @click="getUpdateForm">Modifier mon profil</button>
+          <button class="btn btn-primary shadow fs-4 fw-bold my-3" @click="deleteProfil">Supprimer mon compte</button>
         </div>
     </section>
     </div>
@@ -58,9 +58,10 @@
           <b-form-invalid-feedback :state="passwordValidation" v-if="!$v.user.password.required">Le champ est requis.</b-form-invalid-feedback>
           <b-form-invalid-feedback :state="passwordValidation" v-if="!$v.user.password.strongPassword">Votre mot de passe doit contenir 1 lettre Majuscule, 1 lettre minuscule, 1 chiffre, un caractère spécial et doit faire au minimum 8 caractères.</b-form-invalid-feedback>
         </div>
-        <button type="submit" class="btn btn-primary mt-5 mb-3 align-self-center fs-4 fw-bold rounded-2">Enregistrer</button>
+        <button type="submit" class="btn btn-primary shadow mt-5 mb-3 align-self-center fs-4 fw-bold rounded-2">Enregistrer</button>
         </b-form>
-        <div v-if="isAdmin" class="w-100">
+        <div v-if="isAdmin" class="w-100 my-5">
+          <h2 class="text-start fw-bold text-secondary ps-4">Mes utilisateurs:</h2>
           <table class="table">
             <thead>
               <tr>
