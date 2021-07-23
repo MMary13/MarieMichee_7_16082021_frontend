@@ -9,9 +9,9 @@
             <avatar :username="fullName" :size="120" background-color="#FFD7D7" class="mb-2 px-2"></avatar>
           </div>
           <div class="d-flex flex-column align-items-start ms-3">
-            <p><strong>Prénom :</strong> {{ $store.state.user.firstName }}</p>
-            <p><strong>Nom :</strong> {{ $store.state.user.lastName }}</p>
-            <p><strong>Mail</strong> : {{ $store.state.user.mail }}</p>
+            <p><strong>Prénom :</strong> {{ user.firstName }}</p>
+            <p><strong>Nom :</strong> {{ user.lastName }}</p>
+            <p><strong>Mail</strong> : {{ user.mail }}</p>
           </div>
         </div>
       

@@ -33,8 +33,8 @@
         <button type="submit" class="btn btn-primary my-3 align-self-center fs-4 fw-bold">Modifier</button>
       </form>
       </div>
-      <div id="comment-section" class="d-flex flex-column align-items-start my-4">
-        <h2>Commentaires</h2>
+      <div id="comment-section" class="d-flex flex-column align-items-start my-4 bg-dark p-4">
+        <h2 class="fs-2 fw-bold">Commentaires</h2>
         <div class="comment-form d-flex w-100 my-4">
           <div class="form-group d-flex justify-content-start align-items-center w-75">
             <label for="newComment" class="">Ajouter un commentaire: </label>
@@ -43,8 +43,11 @@
           <div class="plus-icon ms-1" @click="addComment()"><i class="fas fa-plus-square"></i></div>
         </div>
         <div class="d-flex flex-column  justify-content-center align-items-start">
-          <div class="comment-box px-4 py-2 rounded-3 my-3 text-center" v-for="comment in comments" v-bind:key="comment.id">
-            <p class="text-center">{{ comment.content }}</p>
+          <div class="comment-box my-3 d-flex align-items-center" v-for="comment in comments" v-bind:key="comment.id">
+            <div class="comment-text px-2 rounded-3">
+              <p class="text-center">{{ comment.content }}</p>
+            </div>
+            <div @click="deleteAComment(comment.id)" class="trash-icon ms-2" v-if="isMyComment(comment.user_id)"><i class="fas fa-trash-alt ms-2"></i></div>
           </div>
         </div>
       </div>
@@ -71,10 +74,10 @@ export default {
   },
   methods: {
     isMyPost(postUserId) {
-      console.log("Is my post: "+(postUserId == this.$store.state.user.id))
-      console.log("User connected: "+this.$store.state.user.id);
-      console.log("User in the Post: "+postUserId);
       return postUserId == this.$store.state.user.id;
+    },
+    isMyComment(commentUserId) {
+      return commentUserId == this.$store.state.user.id;
     },
     getPostUpdateForm() {
       this.updatingForm = true;
@@ -109,6 +112,7 @@ export default {
       .then(response => {
           console.log(response.data);
           this.getCommentsOfThisPost();
+          this.newComment = null;
         })
         .catch(error => {
           console.error("Impossible de créer ce commentaire: ",error);
@@ -184,12 +188,17 @@ export default {
   font-size: 40px;
 }
 
+.trash-icon {
+  color: $primary;
+}
+
 .edit-icon:hover,.trash-icon:hover, .plus-icon:hover {
   color:$secondary;
 }
 
-.comment-box {
+.comment-text {
   box-shadow: 4px 4px $primary;
+  background-color: white;
 }
 
 .fa-times-circle:hover {
