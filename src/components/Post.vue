@@ -1,7 +1,7 @@
 <template>
     <div id="Post">
       <Header />
-      <div>
+      <div class="bg-dark py-2">
         <h1 class="fs-1 fw-bold text-secondary py-3"> {{ post.title }}</h1>
         <div class="post shadow-lg p-4 rounded-3 my-5 mx-auto">
           <p> {{ post.content }}</p>
@@ -56,7 +56,7 @@
 
 <script>
 import Header from '../components/Header.vue'
-import axios from 'axios'
+import { HTTP } from '../http/http-common'
 
 export default {
   name: 'Post',
@@ -86,7 +86,7 @@ export default {
       this.updatingForm = false;
     },
     getPostInfo() {
-      axios.get('http://localhost:3000/api/post/'+this.$route.params.post_id, { headers: { Authorization: 'Bearer ' +this.$store.state.token}})
+      HTTP.get('/post/'+this.$route.params.post_id, { headers: { Authorization: 'Bearer ' +this.$store.state.token}})
         .then(response => {
           console.log(response.data);
           this.post = response.data.post;
@@ -96,7 +96,7 @@ export default {
         });
     },
     updatePost() {
-        axios.put('http://localhost:3000/api/post/'+this.post.id, this.post, { headers: { Authorization: 'Bearer ' +this.$store.state.token}})
+        HTTP.put('/post/'+this.post.id, this.post, { headers: { Authorization: 'Bearer ' +this.$store.state.token}})
             .then(response => {
                 console.log(response.data);
                 this.$router.push({ name: 'Home'});
@@ -108,7 +108,7 @@ export default {
     addComment() {
       const newCommentObject = { "content":this.newComment,"post_id":this.post.id};
       console.log(newCommentObject);
-      axios.post('http://localhost:3000/api/comment/',newCommentObject, { headers: { Authorization: 'Bearer ' +this.$store.state.token}})
+      HTTP.post('/comment/',newCommentObject, { headers: { Authorization: 'Bearer ' +this.$store.state.token}})
       .then(response => {
           console.log(response.data);
           this.getCommentsOfThisPost();
@@ -119,7 +119,7 @@ export default {
         });
     },
     deleteAComment(commentId) {
-      axios.delete('http://localhost:3000/api/comment/'+commentId, { headers: { Authorization: 'Bearer ' +this.$store.state.token}})
+      HTTP.delete('/comment/'+commentId, { headers: { Authorization: 'Bearer ' +this.$store.state.token}})
       .then(response => {
           console.log(response.data);
           this.getCommentsOfThisPost();
@@ -133,7 +133,7 @@ export default {
       this.comments.forEach(comment => {
         this.deleteAComment(comment.id);
       });
-      axios.delete('http://localhost:3000/api/post/'+postId, { headers: { Authorization: 'Bearer ' +this.$store.state.token}})
+      HTTP.delete('/post/'+postId, { headers: { Authorization: 'Bearer ' +this.$store.state.token}})
         .then(response => {
           console.log(response.data);
           this.$router.push({ name: 'Home' });
@@ -143,7 +143,7 @@ export default {
         });
     },
     getCommentsOfThisPost() {
-        axios.get('http://localhost:3000/api/comment/post/'+this.$route.params.post_id, { headers: { Authorization: 'Bearer ' +this.$store.state.token}})
+        HTTP.get('/comment/post/'+this.$route.params.post_id, { headers: { Authorization: 'Bearer ' +this.$store.state.token}})
         .then(response => {
           this.comments = response.data.comments;
           console.log("Les commentaires sont chargés");

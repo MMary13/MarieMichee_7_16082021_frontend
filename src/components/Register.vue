@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import { HTTP } from '../http/http-common'
 import { required, email } from 'vuelidate/lib/validators'
 
 
@@ -107,7 +107,7 @@ export default {
     signup() {
       if(this.formValidated()) {
         console.log(this.user);
-        axios.post('http://localhost:3000/api/auth/signup',this.user)
+        HTTP.post('/auth/signup',this.user)
           .then(response => {
             console.log(response.data);
             this.login();
@@ -122,18 +122,30 @@ export default {
     login() {
       const requestBody = {"mail":this.user.mail,"password":this.user.password};
       console.log(requestBody);
-      axios.post('http://localhost:3000/api/auth/login',requestBody)
+      HTTP.post('/auth/login',requestBody)
         .then(response => {
           console.log(response.data);
           localStorage.setItem('user-token', response.data.token);
           this.$store.state.token = response.data.token;
+          this.getUserInfo();
+        })
+        .then(() => {
           this.$router.push({ name: "Home" });
         })
         .catch(error => {
           console.error("Votre mot de passe ou votre identifiant est incorrect",error);
         });
-
-    } 
+    },
+    getUserInfo() {
+      HTTP.get('/auth/profil', { headers: { Authorization: 'Bearer ' +this.$store.state.token}})
+            .then(response => {
+              console.log(response.data.user);
+              this.$store.state.user = response.data.user;
+            })
+            .catch(error => {
+              console.error("Impossible de récupérer les information de votre profil",error);
+            });
+    }
   },
   created() {
     console.log("La vue est crée");

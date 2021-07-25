@@ -1,9 +1,9 @@
 <template>
     <div id="Home">
       <Header />
-      <div>
+      <div class="bg-dark">
       <h1 class="fs-1 fw-bold text-secondary py-3">Mon fil d'actualité</h1>
-      <div class="form-container shadow p-2 rounded-3 my-4 mx-auto">
+      <div class="form-container p-2 rounded-3 my-4 mx-auto">
         <h2>Quelque chose à dire ou partager?</h2>
         <b-form id="postform" @submit.prevent="addPost()" class="d-flex flex-column justify-content-center justify-items-center">
         <div class="form-group mt-4 d-flex align-items-center">
@@ -42,7 +42,7 @@
 
 <script>
 import Header from '../components/Header.vue'
-import axios from 'axios';
+import { HTTP } from '../http/http-common'
 
 export default {
   name: 'Home',
@@ -58,7 +58,7 @@ export default {
   },
   methods: {
     addPost() {
-      axios.post('http://localhost:3000/api/post', this.newPost, { headers: { Authorization: 'Bearer ' +this.$store.state.token}})
+      HTTP.post('/post', this.newPost, { headers: { Authorization: 'Bearer ' +this.$store.state.token}})
         .then(response => {
           console.log(response.data);
           //Update posts
@@ -72,7 +72,7 @@ export default {
         });
     },
     getAllPosts() {
-      axios.get('http://localhost:3000/api/post', { headers: { Authorization: 'Bearer ' +this.$store.state.token}})
+      HTTP.get('/post', { headers: { Authorization: 'Bearer ' +this.$store.state.token}})
       .then(response => {
         console.log(response.data);
         this.posts = response.data.posts;
@@ -109,6 +109,17 @@ export default {
 
 .post, .form-container {
   width:75%;
+}
+
+.post {
+  background-color: white;
+}
+
+.form-container {
+  border-style: solid;
+  border-color: $primary;
+  border-width: 4px;
+  box-shadow: 3px 3px 10px grey;
 }
 
 .post-footer div i:hover,.fa-thumbs-up:active,.fa-thumbs-down:active {

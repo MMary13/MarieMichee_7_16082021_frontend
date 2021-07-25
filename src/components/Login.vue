@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import { HTTP } from '../http/http-common'
 import { required, email } from 'vuelidate/lib/validators'
 
 export default {
@@ -88,7 +88,7 @@ export default {
     login() {
       if(this.formValidated()) {
       console.log(this.user);
-      axios.post('http://localhost:3000/api/auth/login',this.user)
+      HTTP.post('/auth/login',this.user)
         .then(response => {
           console.log(response.data);
           localStorage.setItem('user-token', response.data.token);
@@ -112,7 +112,7 @@ export default {
       }
     },
     getUserInfo() {
-      axios.get('http://localhost:3000/api/auth/profil', { headers: { Authorization: 'Bearer ' +this.$store.state.token}})
+      HTTP.get('/auth/profil', { headers: { Authorization: 'Bearer ' +this.$store.state.token}})
             .then(response => {
               console.log(response.data.user);
               this.$store.state.user = response.data.user;

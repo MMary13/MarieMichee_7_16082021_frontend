@@ -101,7 +101,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import { HTTP } from '../http/http-common'
 import { required, email } from 'vuelidate/lib/validators'
 import Header from '../components/Header.vue'
 import Avatar from 'vue-avatar'
@@ -178,7 +178,7 @@ export default {
     updateProfil() {
       if(this.formValidated()) {
         console.log(this.user);
-        axios.put('http://localhost:3000/api/auth/profil',this.user, { headers: { Authorization: 'Bearer ' +this.$store.state.token}})
+        HTTP.put('/auth/profil',this.user, { headers: { Authorization: 'Bearer ' +this.$store.state.token}})
           .then(response => {
             console.log(response.data);
             this.$store.state.user = this.user;
@@ -193,10 +193,11 @@ export default {
       }
     },
     deleteProfil() {
-      axios.delete('http://localhost:3000/api/auth/profil', { headers: { Authorization: 'Bearer ' +this.$store.state.token}})
+      HTTP.delete('/auth/profil', { headers: { Authorization: 'Bearer ' +this.$store.state.token}})
           .then(response => {
             console.log(response.data);
             this.$store.state.user = null;
+            this.$store.state.token= '';
             alert("Votre compte a bien été supprimé");
             this.$router.push( { name: "Landing"});
           })
@@ -205,7 +206,7 @@ export default {
           });
     },
     getAllUsers() {
-      axios.get('http://localhost:3000/api/auth/user', { headers: { Authorization: 'Bearer ' +this.$store.state.token}})
+      HTTP.get('/auth/user', { headers: { Authorization: 'Bearer ' +this.$store.state.token}})
         .then(response => {
           console.log(response.data);
           this.users = response.data.users;
@@ -215,7 +216,7 @@ export default {
         });
     },
     deleteUserByAdmin(userId) {
-      axios.delete('http://localhost:3000/api/auth/user/'+userId, { headers: { Authorization: 'Bearer ' +this.$store.state.token}})
+      HTTP.delete('/auth/user/'+userId, { headers: { Authorization: 'Bearer ' +this.$store.state.token}})
       .then(response => {
         console.log(response.data);
         this.getAllUsers();
@@ -225,7 +226,7 @@ export default {
       })
     },
     updateUserByAdmin(user) {
-      axios.put('http://localhost:3000/api/auth/user/'+user.id, user,{ headers: { Authorization: 'Bearer ' +this.$store.state.token}})
+      HTTP.put('/auth/user/'+user.id, user,{ headers: { Authorization: 'Bearer ' +this.$store.state.token}})
         .then(response => {
           console.log(response.data);
           this.getAllUsers();
