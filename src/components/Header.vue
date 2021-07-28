@@ -6,8 +6,8 @@
             </div>
             <div class="header-links d-flex align-items-center fs-1 text-primary">
                 <!-- <router-link to="/"><i class="fas fa-comments"></i></router-link> -->
-                <router-link to="/profil"><i class="fas fa-user-circle mx-3"></i></router-link>
-                <router-link to="/" @click.native="logout"><i class="fas fa-sign-out-alt mx-3"></i></router-link>
+                <router-link to="/profil" aria-label="Voir mon profil"><i class="fas fa-user-circle mx-3"></i></router-link>
+                <router-link to="/" @click.native="logout" aria-label="Se déconnecter"><i class="fas fa-sign-out-alt mx-3"></i></router-link>
             </div>
         </nav>
     </header>

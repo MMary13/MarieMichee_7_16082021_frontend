@@ -6,8 +6,8 @@
         <div class="post shadow-lg p-4 rounded-3 my-5 mx-auto">
           <p> {{ post.content }}</p>
           <div class="d-flex justify-content-end fs-3 text-primary" v-if="allowToDeletePost(post.user_id)">
-              <div @click="getPostUpdateForm()" v-if="isMyPost(post.user_id)" class="edit-icon"><i class="fas fa-edit me-2"></i></div>
-              <div @click="deletePost(post.id)" class="trash-icon"><i class="fas fa-trash-alt ms-2"></i></div>
+              <div @click="getPostUpdateForm()" v-if="isMyPost(post.user_id)" class="edit-icon"><i class="fas fa-edit me-2" aria-label="Modifier l'article"></i></div>
+              <div @click="deletePost(post.id)" class="trash-icon"><i class="fas fa-trash-alt ms-2" aria-label="Supprimer l'article"></i></div>
           </div>
         </div>
       </div>
@@ -15,7 +15,7 @@
       <div class="form-container bg-dark shadow p-2 rounded-3 my-5 mx-auto" v-if="updatingForm">
         <div class="d-flex justify-content-between">
           <h2 >Modification de l'article</h2>
-          <div @click="closePostUpdateForm()"><i class="fas fa-times-circle fs-4"></i></div>
+          <div @click="closePostUpdateForm()"><i class="fas fa-times-circle fs-4" aria-label="Fermer la fenêtre"></i></div>
         </div>
         <form id="updatepostform" @submit.prevent="updatePost" class="d-flex flex-column justify-content-center justify-items-center">
         <div class="form-group mt-4 d-flex align-items-center">
@@ -40,14 +40,14 @@
             <label for="newComment" class="">Ajouter un commentaire: </label>
             <input class="form-control" v-model="newComment" type="text" name="newComment" id="newComment" required>
           </div>
-          <div class="plus-icon ms-1" @click="addComment()"><i class="fas fa-plus-square"></i></div>
+          <div class="plus-icon ms-1" @click="addComment()"><i class="fas fa-plus-square" aria-label="Ajouter un commentaire"></i></div>
         </div>
         <div class="d-flex flex-column  justify-content-center align-items-start">
           <div class="comment-box my-3 d-flex align-items-center" v-for="comment in comments" v-bind:key="comment.id">
             <div class="comment-text px-2 rounded-3">
               <p class="text-center">{{ comment.content }}</p>
             </div>
-            <div @click="deleteAComment(comment.id)" class="trash-icon ms-2" v-if="allowToDeleteComment(comment.user_id)"><i class="fas fa-trash-alt ms-2"></i></div>
+            <div @click="deleteAComment(comment.id)" class="trash-icon ms-2" v-if="allowToDeleteComment(comment.user_id)"><i class="fas fa-trash-alt ms-2" aria-label="Supprimer un commentaire"></i></div>
           </div>
         </div>
       </div>

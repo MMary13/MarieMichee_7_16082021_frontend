@@ -5,8 +5,9 @@
         <h1 class="my-2 fs-1 fw-bold">Se connecter</h1>
         <form @submit.prevent="login" class="d-flex flex-column justify-content-center justify-items-center">
         <div class="form-group mt-4 d-flex align-items-center">
-            <label for="mail"><i class="far fa-envelope"></i></label>
-            <input class="form-control ms-3" v-model="user.mail" type="email" name="email" id="mail" placeholder="Adresse mail">
+          <i class="far fa-envelope fs-3" aria-label="Mail"></i>
+          <label for="mail" v-show="false">Mail: </label>
+          <input class="form-control ms-3" v-model="user.mail" type="email" name="email" id="mail" placeholder="Adresse mail">
         </div>
         <div v-if="errors" class="error text-secondary text-start ps-5">
           <form-invalid-feedback :state="emailValidation" v-if="!$v.user.mail.required">Le champ est requis.</form-invalid-feedback>
@@ -14,8 +15,9 @@
         </div>
 
         <div class="form-group mt-4 d-flex align-items-center">
-            <label for="pwsd"><i class="fas fa-lock"></i></label>
-            <input class="form-control ms-3" v-model="user.password" type="password" name="password" id="pwsd" placeholder="Mot de passe">
+          <i class="fas fa-lock fs-3" aria-label="Mot de passe"></i>
+          <label for="pwsd" v-show="false">Mot de passe: </label>
+          <input class="form-control ms-3" v-model="user.password" type="password" name="password" id="pwsd" placeholder="Mot de passe">
         </div>
         <div v-if="errors" class="error text-secondary text-start ps-5">
               <form-invalid-feedback :state="passwordValidation" v-if="!$v.user.password.required">Le champ est requis.</form-invalid-feedback>

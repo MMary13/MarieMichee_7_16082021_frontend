@@ -12,7 +12,8 @@
         </div>
 
         <div class="form-group mt-4 d-flex align-items-center">
-            <textarea class="form-control ms-3" v-model="newPost.content" name="post-content" form="postform" rows="5">Entrez votre texte ici...</textarea>
+          <label for="post-content">Contenu: </label>
+          <textarea class="form-control ms-3" v-model="newPost.content" name="post-content" id="post-content" form="postform" rows="5">Entrez votre texte ici...</textarea>
         </div>
         <div class="alert alert-secondary w-100 mt-2" role="alert" v-if="publishIssue">
           Veuillez préciser un titre et un contenu avant de publier votre article.
@@ -23,8 +24,8 @@
 
       </div>
       <section class="d-flex flex-column justify-content-center align-items-center">
-        <div class="post shadow-lg p-4 rounded-3 my-3" v-for="post in posts" v-bind:key="post.id">
-          <h2 class="fs-2 fw-bold text-primary">{{ post.title }}</h2>
+        <div class="post shadow-lg p-4 rounded-3 my-3 bg-primary" v-for="post in posts" v-bind:key="post.id">
+          <h2 class="fs-2 fw-bold">{{ post.title }}</h2>
           <p class="text-start my-3">{{ post.content }}</p>
           <div class="post-footer d-flex justify-content-between">
             <div class="d-flex fs-6">
@@ -32,7 +33,7 @@
               <!-- <div><i class="fas fa-thumbs-up me-2"></i></div>
               <div><i class="fas fa-thumbs-down ms-2"></i></div> -->
             </div>
-            <router-link :to="{ name: 'Post', params: { post_id: post.id }}" class="fw-bold">En savoir plus</router-link>
+            <router-link :to="{ name: 'Post', params: { post_id: post.id }}" class="link-more fw-bold">En savoir plus</router-link>
           </div>
         </div>
       </section>
@@ -124,6 +125,13 @@ export default {
 
 .post-footer div i:hover,.fa-thumbs-up:active,.fa-thumbs-down:active {
   color:$secondary;
+}
+
+.link-more {
+  color: #2c3e50;
+  &:hover {
+    color: $secondary;
+  }
 }
 
 @media (max-width: 767px) {

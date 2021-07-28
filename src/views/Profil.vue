@@ -6,7 +6,7 @@
       <section class="d-flex flex-column flex-md-row justify-content-center justify-content-md-around align-items-center">
         <div class="d-flex flex-column flex-md-row justify-content-center justify-content-md-start">
           <div>
-            <avatar :username="fullName" :size="120" background-color="#FFD7D7" class="mb-2 px-2"></avatar>
+            <avatar :username="fullName" :size="120" background-color="#FFD7D7" color="#2c3e50" class="mb-2 px-2"></avatar>
           </div>
           <div class="d-flex flex-column align-items-start ms-3">
             <p><strong>Prénom :</strong> {{ user.firstName }}</p>
@@ -69,18 +69,25 @@
                 <th scope="col">Utilisateur</th>
                 <th scope="col">Mail</th>
                 <th scope="col">Role</th>
-                <th scope="col"></th>
+                <th scope="col">Actions</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="user in users" v-bind:key="user.id">
                 <th scope="row">{{ user.id }}</th>
                 <td class="d-flex justify-content-center">
-                  <input class="user-input my-2" v-model="user.firstName" type="text">
-                  <input class="user-input my-2" v-model="user.lastName" type="text">
+                  <div>
+                    <label :for="user.firstName" v-show="false">Prénom:</label>
+                    <input class="user-input my-2" v-model="user.firstName"  :id="user.firstName" type="text">
+                  </div>
+                  <div>
+                    <label :for="user.lastName" v-show="false">Nom de famille:</label>
+                    <input class="user-input my-2" v-model="user.lastName" :id="user.lastName" type="text">
+                  </div>
                 </td>
                 <td>
-                  <input class="user-input" v-model="user.mail" type="mail">
+                  <label :for="user.mail" v-show="false">Mail:</label>
+                  <input class="user-input" v-model="user.mail" :id="user.mail" type="mail">
                 </td>
                 <td>
                   <select v-model="user.userRole" class="form-select" aria-label="Role select">
@@ -90,8 +97,8 @@
                   </select>
                 </td>
                 <td class="d-flex flex-column flex-md-row justify-content-center justify-content-md-around">
-                  <div class="edit-icon" @click="updateUserByAdmin(user)"><i class="fas fa-edit"></i></div>
-                  <div class="delete-icon" @click="deleteUserByAdmin(user.id)"><i class="fas fa-trash-alt"></i></div>
+                  <div class="edit-icon" @click="updateUserByAdmin(user)"><i class="fas fa-edit" aria-label="Modifier"></i></div>
+                  <div class="delete-icon" @click="deleteUserByAdmin(user.id)"><i class="fas fa-trash-alt" aria-label="Supprimer"></i></div>
                 </td>
               </tr>
             </tbody>
