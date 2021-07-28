@@ -5,7 +5,7 @@
       <h1 class="fs-1 fw-bold text-secondary py-3">Mon fil d'actualité</h1>
       <div class="form-container p-2 rounded-3 my-4 mx-auto">
         <h2>Quelque chose à dire ou partager?</h2>
-        <b-form id="postform" @submit.prevent="addPost()" class="d-flex flex-column justify-content-center justify-items-center">
+        <form id="postform" @submit.prevent="addPost()" class="d-flex flex-column justify-content-center justify-items-center">
         <div class="form-group mt-4 d-flex align-items-center">
             <label for="title">Titre: </label>
             <input class="form-control ms-3" v-model="newPost.title" type="text" name="title" id="title">
@@ -18,15 +18,24 @@
         <div class="alert alert-secondary w-100 mt-2" role="alert" v-if="publishIssue">
           Veuillez préciser un titre et un contenu avant de publier votre article.
         </div>
+
+        <div class="form-group mt-4 d-flex align-items-start">
+          <input type="file" accept="image/png, image/jpeg, image/jpg"  @change="onFileAdded($event)">
+          <!-- <button mat-raised-button color="primary" @click="imageInput.click()">Ajouter une Image</button>-->
+          <!--<img [src]="imagePreview" *ngIf="imagePreview" style="max-height: 100px;display:block;margin-top:10px">-->
+        </div>
         
         <button type="submit" class="btn btn-primary shadow my-3 align-self-center fs-4 fw-bold">Publier</button>
-      </b-form>
+      </form>
 
       </div>
       <section class="d-flex flex-column justify-content-center align-items-center">
         <div class="post shadow-lg p-4 rounded-3 my-3 bg-primary" v-for="post in posts" v-bind:key="post.id">
           <h2 class="fs-2 fw-bold">{{ post.title }}</h2>
-          <p class="text-start my-3">{{ post.content }}</p>
+          <div class="d-flex flex-column flex-md-row my-2">
+            <img :src="post.imageUrl" :alt="post.title" v-if="hasImage(post.imageUrl)">
+            <p class="text-start ps-2">{{ post.content }}</p>
+          </div>
           <div class="post-footer d-flex justify-content-between">
             <div class="d-flex fs-6">
               <p> Publié le {{ post.createdAt }}</p>
@@ -54,12 +63,23 @@ export default {
     return {
       posts: [],
       newPost: {},
+      newFile: null,
       publishIssue: false
     }
   },
   methods: {
+    hasImage(imageUrl) {
+      return imageUrl != null
+    },
+    onFileAdded() {
+      const input = document.querySelector('input[type="file"]');
+      this.newFile = input.files[0];
+    },
     addPost() {
-      HTTP.post('/post', this.newPost, { headers: { Authorization: 'Bearer ' +this.$store.state.token}})
+      const formData = new FormData();
+      formData.append('post', JSON.stringify(this.newPost));
+      formData.append('image', this.newFile);
+      HTTP.post('/post', formData, { headers: { Authorization: 'Bearer ' +this.$store.state.token}})
         .then(response => {
           console.log(response.data);
           //Update posts
@@ -116,6 +136,11 @@ export default {
   background-color: white;
 }
 
+.post img {
+  max-width:50%;
+  height: auto;
+}
+
 .form-container {
   border-style: solid;
   border-color: $primary;
@@ -141,6 +166,10 @@ export default {
 
   .form-container h2 {
     font-size:20px;
+  }
+
+  .post img {
+    max-width:100%;
   }
 }
 

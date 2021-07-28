@@ -4,7 +4,10 @@
       <div class="bg-dark py-2">
         <h1 class="fs-1 fw-bold text-secondary py-3"> {{ post.title }}</h1>
         <div class="post shadow-lg p-4 rounded-3 my-5 mx-auto">
-          <p> {{ post.content }}</p>
+          <div class="d-flex flex-column flex-md-row my-2">
+            <img :src="post.imageUrl" :alt="post.title" v-if="hasImage(post.imageUrl)">
+            <p class="text-start ps-2">{{ post.content }}</p>
+          </div>
           <div class="d-flex justify-content-end fs-3 text-primary" v-if="allowToDeletePost(post.user_id)">
               <div @click="getPostUpdateForm()" v-if="isMyPost(post.user_id)" class="edit-icon"><i class="fas fa-edit me-2" aria-label="Modifier l'article"></i></div>
               <div @click="deletePost(post.id)" class="trash-icon"><i class="fas fa-trash-alt ms-2" aria-label="Supprimer l'article"></i></div>
@@ -29,6 +32,11 @@
         </div>
         <div class="alert alert-secondary w-100 mt-2" role="alert" v-if="updateIssue">
           Veuillez préciser un titre et un contenu avant de publier votre article.
+        </div>
+        <div class="form-group mt-4 d-flex align-items-start">
+          <input type="file" accept="image/png, image/jpeg, image/jpg"  @change="onFileAdded()">
+          <!-- <button mat-raised-button color="primary" @click="imageInput.click()">Ajouter une Image</button>-->
+          <!--<img [src]="imagePreview" *ngIf="imagePreview" style="max-height: 100px;display:block;margin-top:10px">-->
         </div>
         <button type="submit" class="btn btn-primary my-3 align-self-center fs-4 fw-bold">Modifier</button>
       </form>
@@ -66,6 +74,7 @@ export default {
   data() {
       return {
           post: {},
+          newFile:null,
           comments: [],
           updateIssue:false,
           updatingForm:false,
@@ -73,6 +82,9 @@ export default {
       }
   },
   methods: {
+    hasImage(imageUrl) {
+      return imageUrl != null
+    },
     allowToDeletePost(postUserId) {
       if(this.isMyPost(postUserId) || this.isAdmin()) {
         return true;
@@ -113,8 +125,15 @@ export default {
           console.error("Impossible de récupérer l'article': ",error);
         });
     },
+        onFileAdded() {
+      const input = document.querySelector('input[type="file"]');
+      this.newFile = input.files[0];
+    },
     updatePost() {
-        HTTP.put('/post/'+this.post.id, this.post, { headers: { Authorization: 'Bearer ' +this.$store.state.token}})
+      const formData = new FormData();
+      formData.append('post', JSON.stringify(this.post));
+      formData.append('image', this.newFile);
+        HTTP.put('/post/'+this.post.id, formData, { headers: { Authorization: 'Bearer ' +this.$store.state.token}})
             .then(response => {
                 console.log(response.data);
                 this.$router.push({ name: 'Home'});
@@ -223,6 +242,11 @@ export default {
   color:$primary;
 }
 
+.post img {
+  max-width:50%;
+  height: auto;
+}
+
 @media (max-width: 767px) {
   .post, .form-container {
   width: 90%
@@ -230,6 +254,10 @@ export default {
 
   .form-container h2 {
     font-size:20px;
+  }
+
+    .post img {
+    max-width:100%;
   }
 }
 
