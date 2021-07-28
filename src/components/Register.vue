@@ -5,30 +5,34 @@
         <h1 class="my-2 fs-1 fw-bold">S'inscrire</h1>
         <form @submit.prevent="signup" class="d-flex flex-column justify-content-center justify-items-center">
         <div class="form-group mt-4 d-flex align-items-center">
-            <label for="firstName"><i class="fas fa-user"></i></label>
-            <input class="form-control ms-3" v-model="user.firstName" type="text" name="firstName" id="firstName" placeholder="Prénom">
+          <i class="fas fa-user fs-3" aria-label="Prénom"></i>
+          <label for="firstName" v-show="false">Prénom: </label>
+          <input class="form-control ms-3" v-model="user.firstName" type="text" name="firstName" id="firstName" placeholder="Prénom">
         </div>
         <div v-if="errors" class="error text-secondary text-start ps-5">
           <form-invalid-feedback :state="prenomValidation" v-if="!$v.user.firstName.required">Le champ est requis.</form-invalid-feedback>
           </div>
         <div class="form-group mt-4 d-flex align-items-center">
-            <label for="lastName"><i class="fas fa-user"></i></label>
-            <input class="form-control ms-3" v-model="user.lastName" type="text" name="lastName" id="lastName" placeholder="Nom de famille">
+          <i class="fas fa-user fs-3" aria-label="Nom de famille"></i>
+          <label for="lastName" v-show="false">Nom de famille: </label>
+          <input class="form-control ms-3" v-model="user.lastName" type="text" name="lastName" id="lastName" placeholder="Nom de famille">
         </div>
         <div v-if="errors" class="error text-secondary text-start ps-5">
               <form-invalid-feedback :state="nomValidation" v-if="!$v.user.lastName.required">Le champ est requis.</form-invalid-feedback>
         </div>
         <div class="form-group mt-4 d-flex align-items-center">
-            <label for="email"><i class="far fa-envelope"></i></label>
-            <input class="form-control ms-3" v-model="user.mail" type="email" name="email" id="email" placeholder="Adresse mail">
+          <i class="far fa-envelope fs-3" aria-label="Mail"></i>
+          <label for="email" v-show="false">Mail: </label>
+          <input class="form-control ms-3" v-model="user.mail" type="email" name="email" id="email" placeholder="Adresse mail">
         </div>
         <div v-if="errors" class="error text-secondary text-start ps-5">
               <form-invalid-feedback :state="emailValidation" v-if="!$v.user.mail.required">Le champ est requis.</form-invalid-feedback>
               <form-invalid-feedback :state="emailValidation" v-if="!$v.user.mail.email">Votre mail n'est pas valide.</form-invalid-feedback>
         </div>
         <div class="form-group mt-4 d-flex align-items-center">
-            <label for="password"><i class="fas fa-lock"></i></label>
-            <input class="form-control ms-3" v-model="user.password" type="password" name="password" id="password" placeholder="Mot de passe">
+          <i class="fas fa-lock fs-3" aria-label="Mot de passe"></i>
+          <label for="password" v-show="false">Mot de passe: </label>
+          <input class="form-control ms-3" v-model="user.password" type="password" name="password" id="password" placeholder="Mot de passe">
         </div>
         <div v-if="errors" class="error text-secondary text-start ps-5">
           <form-invalid-feedback :state="passwordValidation" v-if="!$v.user.password.required">Le champ est requis.</form-invalid-feedback>
