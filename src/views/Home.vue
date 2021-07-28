@@ -20,7 +20,7 @@
         </div>
 
         <div class="form-group mt-4 d-flex align-items-start">
-          <input type="file" accept="image/png, image/jpeg, image/jpg"  @change="onFileAdded($event)">
+          <input type="file" accept="image/png, image/jpeg, image/jpg" ref="inputFile" @change="onFileAdded($event)">
           <!-- <button mat-raised-button color="primary" @click="imageInput.click()">Ajouter une Image</button>-->
           <!--<img [src]="imagePreview" *ngIf="imagePreview" style="max-height: 100px;display:block;margin-top:10px">-->
         </div>
@@ -86,6 +86,9 @@ export default {
           this.getAllPosts();
           //Clear form
           this.newPost = {};
+          this.newFile=null;
+          this.$refs.inputFile.value = null;
+      
         })
         .catch(error => {
           console.error("Impossible de publier cet article: ",error);
