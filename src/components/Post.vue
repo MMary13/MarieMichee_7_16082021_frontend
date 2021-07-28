@@ -5,8 +5,8 @@
         <h1 class="fs-1 fw-bold text-secondary py-3"> {{ post.title }}</h1>
         <div class="post shadow-lg p-4 rounded-3 my-5 mx-auto">
           <p> {{ post.content }}</p>
-          <div class="d-flex justify-content-end fs-3 text-primary" v-if="isMyPost(post.user_id)">
-              <div @click="getPostUpdateForm()" class="edit-icon"><i class="fas fa-edit me-2"></i></div>
+          <div class="d-flex justify-content-end fs-3 text-primary" v-if="allowToDeletePost(post.user_id)">
+              <div @click="getPostUpdateForm()" v-if="isMyPost(post.user_id)" class="edit-icon"><i class="fas fa-edit me-2"></i></div>
               <div @click="deletePost(post.id)" class="trash-icon"><i class="fas fa-trash-alt ms-2"></i></div>
           </div>
         </div>
@@ -47,7 +47,7 @@
             <div class="comment-text px-2 rounded-3">
               <p class="text-center">{{ comment.content }}</p>
             </div>
-            <div @click="deleteAComment(comment.id)" class="trash-icon ms-2" v-if="isMyComment(comment.user_id)"><i class="fas fa-trash-alt ms-2"></i></div>
+            <div @click="deleteAComment(comment.id)" class="trash-icon ms-2" v-if="allowToDeleteComment(comment.user_id)"><i class="fas fa-trash-alt ms-2"></i></div>
           </div>
         </div>
       </div>
@@ -73,11 +73,29 @@ export default {
       }
   },
   methods: {
+    allowToDeletePost(postUserId) {
+      if(this.isMyPost(postUserId) || this.isAdmin()) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    allowToDeleteComment(commentUserId) {
+      if(this.isMyComment(commentUserId) || this.isAdmin()) {
+        return true;
+      } else {
+        return false;
+      }
+    },
     isMyPost(postUserId) {
-      return postUserId == this.$store.state.user.id;
+      return postUserId == this.$store.state.user.id
     },
     isMyComment(commentUserId) {
       return commentUserId == this.$store.state.user.id;
+    },
+    isAdmin() {
+      console.log("userRole: "+this.$store.state.user.userRole);
+      return this.$store.state.user.userRole == 'ADMIN';
     },
     getPostUpdateForm() {
       this.updatingForm = true;
